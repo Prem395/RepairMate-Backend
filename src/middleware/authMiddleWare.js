@@ -10,18 +10,21 @@ export const authMiddleWare = async (req, res, next) => {
         message: "invalid credential",
       });
     }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log(decoded.id);
 
     const user = await userModel.findById(decoded.id);
+
     if (!user) {
       return res.status(401).json({
         message: "user not found",
       });
     }
+
     req.user = user;
     next();
   } catch (error) {
+    console.log(error);
     return res.status(401).json({
       message: "invalid credential",
     });
