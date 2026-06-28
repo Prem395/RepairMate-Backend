@@ -10,10 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://repairmate-backend-1.onrender.com",
-    ],
+    origin: ["http://localhost:5173", "https://repair-mate-jsws.vercel.app"],
     credentials: true,
   }),
 );
