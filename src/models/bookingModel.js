@@ -9,27 +9,28 @@ const bookingSchema = new mongoose.Schema(
     },
 
     service: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
-      default: null,
-    },
-
-    deviceType: {
       type: String,
       required: true,
-      trim: true,
+    },
+
+    fullName: {
+      type: String,
+      required: true,
     },
 
     phoneNumber: {
       type: String,
       required: true,
-      trim: true,
+    },
+
+    deviceType: {
+      type: String,
+      required: true,
     },
 
     issueDescription: {
       type: String,
       required: true,
-      trim: true,
     },
 
     imageUrl: {
@@ -39,18 +40,11 @@ const bookingSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [
-        "pending",
-        "in-progress",
-        "completed",
-        "cancelled",
-      ],
-      default: "pending",
+      enum: ["Pending", "Confirmed", "In Progress", "Completed"],
+      default: "Pending",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true },
 );
 
 export default mongoose.model("Booking", bookingSchema);

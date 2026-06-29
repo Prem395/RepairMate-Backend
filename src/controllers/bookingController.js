@@ -2,17 +2,31 @@ import bookingModel from "../models/bookingModel.js";
 
 export const createBooking = async (req, res) => {
   try {
-    const { service, deviceType, phoneNumber, issueDescription, imageUrl } =
-      req.body;
+    const {
+      fullName,
+      service,
+      deviceType,
+      phoneNumber,
+      issueDescription,
+      imageUrl,
+    } = req.body;
 
-    if (!deviceType || !phoneNumber || !issueDescription) {
+    if (
+      !fullName ||
+      !service ||
+      !deviceType ||
+      !phoneNumber ||
+      !issueDescription
+    ) {
       return res.status(400).json({
+        success: false,
         message: "All fields are required",
       });
     }
 
     const booking = await bookingModel.create({
       user: req.user._id,
+      fullName,
       service,
       deviceType,
       phoneNumber,
@@ -22,20 +36,22 @@ export const createBooking = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "service booked successfully",
+      message: "Service booked successfully",
       booking,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to create booking" });
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create booking",
+    });
   }
 };
 
 export const getMyBookings = async (req, res) => {
   try {
-    const booking = await bookingModel
-      .find({ user: req.user._id })
-      .populate("service");
+    const booking = await bookingModel.find({ user: req.user._id });
 
     res.status(200).json({
       success: true,
@@ -52,8 +68,7 @@ export const getAllBooking = async (req, res) => {
   try {
     const bookings = await bookingModel
       .find()
-      .populate("user", "firstName lastName email")
-      .populate("service", "title");
+      .populate("user", "firstName lastName email");
 
     res.status(200).json({
       success: true,
@@ -77,7 +92,7 @@ export const updateBookingStatus = async (req, res) => {
       });
     }
 
-    const validStatuses = ["pending", "in-progress", "completed", "cancelled"];
+    const validStatuses = ["Pending", "Confirmed", "In Progress", "Completed"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         message: "Invalid status value",
